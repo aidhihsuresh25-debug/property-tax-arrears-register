@@ -1,0 +1,17 @@
+{
+  "name": "property-tax-arrears-register",
+  "version": "1.0.0",
+  "description": "Municipal Property Tax Payment and Arrears Register (SIH 2026 Practical Assessment)",
+  "main": "server.js",
+  "type": "commonjs",
+  "scripts": {
+    "start": "node server.js",
+    "seed": "node db.js --reseed"
+  },
+  "engines": {
+    "node": ">=22.5.0"
+  },
+  "dependencies": {
+    "express": "^4.22.2"
+  }
+}

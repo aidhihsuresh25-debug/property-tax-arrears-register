@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ward Property Tax &amp; Arrears Register</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+<header class="letterhead">
+  <div class="letterhead__seal" aria-hidden="true">₹</div>
+  <div class="letterhead__text">
+    <p class="eyebrow">Municipal Revenue Office</p>
+    <h1>Property Tax &amp; Arrears Register</h1>
+    <p class="subtitle">Live demand, payment and arrears — no more page-by-page lookups.</p>
+  </div>
+  <button id="btnAdd" class="btn btn--primary letterhead__add">+ New Entry</button>
+</header>
+
+<main class="sheet">
+
+  <section class="toolbar" aria-label="Search and filters">
+    <div class="field field--grow">
+      <label for="search">Search</label>
+      <input id="search" type="text" placeholder="Owner name, property ID or record ID…" autocomplete="off">
+    </div>
+    <div class="field">
+      <label for="wardFilter">Ward</label>
+      <select id="wardFilter">
+        <option value="">All wards</option>
+        <option value="1">Ward 1</option>
+        <option value="2">Ward 2</option>
+        <option value="3">Ward 3</option>
+        <option value="4">Ward 4</option>
+        <option value="5">Ward 5</option>
+        <option value="6">Ward 6</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="statusFilter">Status</label>
+      <select id="statusFilter">
+        <option value="">All statuses</option>
+        <option value="Unpaid">Unpaid</option>
+        <option value="Partially Paid">Partially Paid</option>
+        <option value="Paid">Paid</option>
+      </select>
+    </div>
+    <div class="field">
+      <label for="sortBy">Order defaulters by</label>
+      <select id="sortBy">
+        <option value="arrears_desc">Arrears amount, then age</option>
+        <option value="age_desc">Age of arrears, then amount</option>
+        <option value="ward_asc">Ward</option>
+        <option value="owner_asc">Owner name</option>
+      </select>
+    </div>
+  </section>
+
+  <p class="result-count" id="resultCount" role="status" aria-live="polite"></p>
+
+  <section id="stateBanner" class="state-banner" hidden></section>
+
+  <div class="table-wrap">
+    <table class="register" id="registerTable">
+      <thead>
+        <tr>
+          <th>Stamp</th>
+          <th>Owner</th>
+          <th>Property</th>
+          <th>Ward</th>
+          <th class="num">Demand (₹)</th>
+          <th class="num">Paid (₹)</th>
+          <th class="num">Arrears (₹)</th>
+          <th>Last payment</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="registerBody">
+      </tbody>
+    </table>
+  </div>
+
+  <div id="cardList" class="card-list"></div>
+
+</main>
+
+<!-- Add / Edit form, shown as an inline dialog panel -->
+<div id="formOverlay" class="overlay" hidden>
+  <div class="form-panel" role="dialog" aria-modal="true" aria-labelledby="formTitle">
+    <div class="form-panel__head">
+      <h2 id="formTitle">New Entry</h2>
+      <button id="btnCloseForm" class="btn btn--ghost" aria-label="Close">✕</button>
+    </div>
+
+    <form id="recordForm" novalidate>
+      <input type="hidden" id="f_record_id">
+
+      <div class="form-grid">
+        <div class="field">
+          <label for="f_property_id">Property ID *</label>
+          <input id="f_property_id" name="property_id" type="text" placeholder="e.g. W3-00099" required>
+        </div>
+        <div class="field">
+          <label for="f_owner_name">Owner name *</label>
+          <input id="f_owner_name" name="owner_name" type="text" required>
+        </div>
+        <div class="field">
+          <label for="f_ward">Ward *</label>
+          <select id="f_ward" name="ward" required>
+            <option value="">Select ward</option>
+            <option value="1">Ward 1</option>
+            <option value="2">Ward 2</option>
+            <option value="3">Ward 3</option>
+            <option value="4">Ward 4</option>
+            <option value="5">Ward 5</option>
+            <option value="6">Ward 6</option>
+          </select>
+        </div>
+        <div class="field">
+          <label for="f_assessed_value">Assessed value (₹) *</label>
+          <input id="f_assessed_value" name="assessed_value" type="number" min="0" step="1" required>
+        </div>
+        <div class="field">
+          <label for="f_demand_amount">Demand amount (₹) *</label>
+          <input id="f_demand_amount" name="demand_amount" type="number" min="0" step="1" required>
+        </div>
+        <div class="field">
+          <label for="f_paid_amount">Paid amount (₹) *</label>
+          <input id="f_paid_amount" name="paid_amount" type="number" min="0" step="1" required>
+        </div>
+        <div class="field">
+          <label for="f_last_payment_date">Last payment date</label>
+          <input id="f_last_payment_date" name="last_payment_date" type="date">
+          <p class="hint">Leave blank if the owner has never paid.</p>
+        </div>
+        <div class="field field--readonly">
+          <label>Arrears (calculated)</label>
+          <output id="f_arrears_preview">₹0</output>
+        </div>
+      </div>
+
+      <p id="formError" class="form-error" role="alert" hidden></p>
+
+      <div class="form-actions">
+        <button type="button" id="btnCancelForm" class="btn btn--ghost">Cancel</button>
+        <button type="submit" id="btnSaveForm" class="btn btn--primary">Save entry</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<div id="toast" class="toast" role="status" aria-live="polite" hidden></div>
+
+<script src="app.js"></script>
+</body>
+</html>
